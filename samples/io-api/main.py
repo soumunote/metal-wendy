@@ -1,17 +1,27 @@
 #!/usr/bin/env python3
 import uvicorn
 from fastapi import FastAPI
+from starlette.requests import Request
+from starlette.staticfiles import StaticFiles
+from starlette.templating import Jinja2Templates
+
+import time
 
 import pigpio
-from wings-action import WingController
+import wingAction;
 
 app = FastAPI()
-pi = pigpio.pi
-wc = WingController(pi)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
+
+pi = pigpio.pi()
+wc = wingAction.WingController(pi)
 
 @app.get("/")
-async def root():
-  return {"message": "Hello World"}
+async def root(request: Request):
+  return templates.TemplateResponse("index.html", 
+    {"request": request}
+  )
 
 @app.get("/wings/single/{degree}/{step}")
 async def wings_single(degree: int, step: int = 0):
@@ -24,6 +34,20 @@ async def wings_array(degree: int):
   
 @app.get("/wings/action/{name}")
 async def wings_action(name: str):
+  if name == "delight":
+    """歓喜"""
+    wc.rotate(15)
+    time.sleep(0.7)
+    for i in range(5):
+      wc.rotate(-15)
+      wc.rotate(15)
+    wc.rotate(-90)
+
+  elif name == "sleepy":
+    """眠い"""
+    wc.rotate(20, 2)
+    wc.rotate(-90, 2)
+
   return {"message": name}
 
 if __name__ == "__main__":

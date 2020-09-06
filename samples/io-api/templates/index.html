@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Bare - Start Bootstrap Template</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="{{ url_for('static', path='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', path='bootstrap-slider/css/bootstrap-slider.min.css') }}" rel="stylesheet">
+  <style>
+    .card {
+      margin-top: 1.25rem
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">Metal Wendy</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/soumunote/metal-wendy">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="mailto:soumunote@gmail.com">Contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h1 class="disokay-4">ウェンディ</h1>
+          <p class="lead">ウェンディへお願いしてみましょう。</p>
+        </div>        
+        <div class="col-4">
+          <img src="{{ url_for('static', path='images/wendy.png') }}"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="card">
+      <h6 class="card-header">耳上げて！</h6>
+      <div class="card-body">
+        <p class="card-text">指定角度に耳たぶを持ち上げます。</p>
+        <input type="text" id="degree"
+          data-provider="slider" data-slider-min="-90" data-slider-max="90" 
+          data-slider-step="10"  data-slider-value="-90" data-slider-orientation="horizontal"/>
+      </div>
+    </div>
+
+    <div class="card">
+      <h6 class="card-header">今の気持ちは？</h6>
+      <div class="card-body">
+        <p class="card-text">ウェンディの気持ちを表現します。</p>
+        <button id="delight" class="btn btn-primary wendy-action">歓喜</button>
+        <button id="sleepy" class="btn btn-primary wendy-action">眠い</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="{{ url_for('static', path='jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', path='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', path='bootstrap-slider/bootstrap-slider.min.js') }}"></script>
+
+  <script type="text/JavaScript">
+    $(function() {
+      $('.wendy-action').click(function() {
+        $.ajax({url: "/wings/action/" + this.id });
+      });
+
+      $('#degree').slider();
+      $('#degree').on("change", function() {
+        $.ajax({url: "/wings/single/" + this.value + "/0" });
+      });
+    });
+  </script>
+</body>
+
+</html>
