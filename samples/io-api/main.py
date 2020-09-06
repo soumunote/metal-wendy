@@ -14,7 +14,8 @@ async def root():
   return {"message": "Hello World"}
 
 @app.get("/wings/single/{degree}/{step}")
-async def wings_single(degree: int, step: int):
+async def wings_single(degree: int, step: int = 0):
+  wc.rotate(degree, step)
   return {"message": "Hello World"}
 
 @app.get("/wings/array/")
@@ -23,8 +24,6 @@ async def wings_array(degree: int):
   
 @app.get("/wings/action/{name}")
 async def wings_action(name: str):
-  wc = WingController()
-  wc.
   return {"message": name}
 
 if __name__ == "__main__":
