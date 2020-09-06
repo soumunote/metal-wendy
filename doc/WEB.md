@@ -6,5 +6,5 @@ sudo npm install -g create-react-app
 ```
 
 ```
-pip3 install fastapi uvicorn
+pip3 install fastapi uvicorn aiofiles
 ```
