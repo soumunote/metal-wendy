@@ -2,7 +2,7 @@
 ```sh
 apt -y update
 apt -y install python3 python3-pip
-pip3 install fastapi uvicorn 
+pip3 install fastapi uvicorn aiofiles
 ```
 
 ## 起動
