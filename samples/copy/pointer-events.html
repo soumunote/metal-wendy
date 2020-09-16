@@ -23,7 +23,11 @@
   <script type="text/javascript">
   
   function startup() {
-    var el = document.
+    var el = document.getElementByTagName("canvas")[0];
+    el.addEventListener("pointerdown", handleStart, false);
+    el.addEventListener("pointerup", handleEnd, false);
+    el.addEventListener("pointercancel", handleCancel, false);
+    el.
   }
   
   </script>
