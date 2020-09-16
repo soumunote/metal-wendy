@@ -23,12 +23,22 @@
   <script type="text/javascript">
   
   function startup() {
-    var el = document.getElementByTagName("canvas")[0];
+    const el = document.getElementByTagName("canvas")[0];
     el.addEventListener("pointerdown", handleStart, false);
     el.addEventListener("pointerup", handleEnd, false);
     el.addEventListener("pointercancel", handleCancel, false);
-    el.
+    el.addEventListener("pointermove", handleMove, false);
+    log("initialized.");
   }
+    
+  var ongoingTouches = new Array();
+   
+  function handleStart(evt) {
+    log("pointerdown.");
+    const el = document.getElementByTagName("canvas")[0];
+    const ctx = el.getContext("2d");
+    
+    
   
   </script>
 </html>
