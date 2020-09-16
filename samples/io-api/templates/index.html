@@ -32,15 +32,20 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Home
+            <a class="nav-link" id="menuWing" href="#">WingAction
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" id="menuRun" href="#">Run! Run! Run!
               <span class="sr-only">(current)</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="https://github.com/soumunote/metal-wendy">About</a>
+            <a class="nav-link" href="https://github.com/soumunote/metal-wendy">どこにある？</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="mailto:soumunote@gmail.com">Contact</a>
+            <a class="nav-link" href="mailto:soumunote@gmail.com">だれの？</a>
           </li>
         </ul>
       </div>
@@ -64,23 +69,35 @@
 
   <div class="container">
 
-    <div class="card">
-      <h6 class="card-header">耳上げて！</h6>
-      <div class="card-body">
-        <p class="card-text">指定角度に耳たぶを持ち上げます。</p>
-        <input type="text" id="degree"
-          data-provider="slider" data-slider-min="-90" data-slider-max="90" 
-          data-slider-step="10"  data-slider-value="-90" data-slider-orientation="horizontal"/>
+    <div id="divWing" style="display: inline-block;">
+      <div class="card">
+        <h6 class="card-header">耳上げて！</h6>
+        <div class="card-body">
+          <p class="card-text">指定角度に耳たぶを持ち上げます。</p>
+          <input type="text" id="degree"
+            data-provider="slider" data-slider-min="-90" data-slider-max="90" 
+            data-slider-step="10"  data-slider-value="-90" data-slider-orientation="horizontal"/>
+        </div>
+      </div>  
+      <div class="card">
+        <h6 class="card-header">今の気持ちは？</h6>
+        <div class="card-body">
+          <p class="card-text">ウェンディの気持ちを表現します。</p>
+          <button id="delight" class="btn btn-primary wendy-action">歓喜</button>
+          <button id="sleepy" class="btn btn-primary wendy-action">眠い</button>
+        </div>
       </div>
     </div>
 
-    <div class="card">
-      <h6 class="card-header">今の気持ちは？</h6>
-      <div class="card-body">
-        <p class="card-text">ウェンディの気持ちを表現します。</p>
-        <button id="delight" class="btn btn-primary wendy-action">歓喜</button>
-        <button id="sleepy" class="btn btn-primary wendy-action">眠い</button>
-      </div>
+    <div id="divRun" style="display: none;">
+      <div class="card">
+        <h6 class="card-header">Joycon</h6>
+        <div style="width: 240px; height: 240px; border-radius: 50%; background: slateblue;
+                    background-image: linear-gradient(top , #FF8F5E, #D44E1A);
+                    box-shadow: 0px 5px 10px #000000, 0px 1px 3px rgba(255, 255, 255, 0.8) inset;
+                    margin: 30px;">
+        </div>
+      </div>  
     </div>
 
   </div>
@@ -97,8 +114,22 @@
       });
 
       $('#degree').slider();
-      $('#degree').on("change", function() {
+      $('#degree').on('change', function() {
         $.ajax({url: "/wings/single/" + this.value + "/0" });
+      });
+
+      $('.nav-link').on('click', function() {
+        switch ($(this).attr('id')) {
+          case "menuWing":
+            $('#divWing').css('display', 'inline-block');
+            $('#divRun' ).css('display', 'none');
+            break ;
+          case "menuRun":
+            $('#divWing').css('display', 'none');
+            $('#divRun' ).css('display', 'inline-block');
+            break ;
+        }
+        $('#navbarResponsive').addClass('collapse');
       });
     });
   </script>
