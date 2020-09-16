@@ -3,6 +3,7 @@
 ```sh
 sudo apt -y install pigpio
 sudo systemctl start pigpiod
+sudo systemctl enable pigpio
 sudo apt -y install python-pip python3-pip
 sudo pip3 install pigpio
 ```
@@ -22,12 +23,4 @@ for i in range(1, 3):
 
 pi.set_mode(18, pigpio.INPUT)
 pi.stop()
-```
-
-## 更に、Django にて簡易操作アプリを作ろう
-```
-sudo pip3 install django
-django-admin startproject wings_site
-cd wings_site/
-python3 manage.py runserver
 ```
