@@ -98,12 +98,23 @@
 
     <div id="divRun" style="display: none;">
       <div class="card">
-        <h6 class="card-header">Joycon</h6>
-        <div style="background: #cccccc;">
+        <h6 class="card-header">Stick</h6>
+        <div class="m-3">
+          <div class="row">
+            <div class="col m-1 border">&nbsp;</div>
+            <div class="col m-1 border">&nbsp;</div>
+          </div>
+          <div class="row">
+            <div id="textX" class="col m-1 border text=right">&nbsp;</div>
+            <div id="textY" class="col m-1 border text-right">&nbsp;</div>
+          </div>
+        </div>
+        <div id="slideArea" style="background: #cccccc;">
           <div class="hekomi"
               style="width: 160px; height: 160px; border-radius: 50%; 
                       margin: 30px;">
               <img src="{{ url_for('static', path='images/SlidePadRed.png') }}"
+                   id="pad"
                    style="position: relative; top:20px; left:20px;">
           </div>
         </div>
@@ -141,6 +152,42 @@
         }
         $('#navbarResponsive').addClass('collapse');
       });
+
+      const padLeft = $('#pad').css('left');
+      const padTop = $('#pad').css('top');
+      let dragging = false;
+      let orgX, orgY;
+      let absX, absY;
+
+      $('#slideArea').on({
+
+        "pointerdown": function(e) {
+          console.log("pointerdown X=" + absX + " Y=" + absY);
+          [orgX, orgY] = [e.clientX, e.clientY];
+          [absX, absX] = [0, 0];  
+          dragging = true;
+          showValue();
+        },
+
+        "pointerup": function(e) {
+          console.log("pointerup");
+          dragging = false;
+        },
+
+        "pointermove": function(e) {
+          console.log("pointermove X=" + absX + " Y=" + absY);
+          if (dragging) {
+            [absX, absY] = [e.clientX - orgX, e.clientY - orgY]
+            showValue();
+          }
+        },
+
+      });
+
+      function showValue() {
+        $('#textX').html("X=" + absX);
+        $('#textY').html("Y=" + absY);
+      }
     });
   </script>
 </body>
