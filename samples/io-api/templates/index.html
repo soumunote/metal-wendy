@@ -17,6 +17,13 @@
     .card {
       margin-top: 1.25rem
     }
+    .hekomi {
+      box-shadow:
+        -10px 10px 30px transparent,
+        10px -10px 30px transparent,
+        inset -10px 10px 30px rgba(18, 47, 61, 0.5),
+        inset 10px -10px 30px rgba(248, 253, 255, 0.9);
+    }
   </style>
 </head>
 
@@ -92,10 +99,13 @@
     <div id="divRun" style="display: none;">
       <div class="card">
         <h6 class="card-header">Joycon</h6>
-        <div style="width: 240px; height: 240px; border-radius: 50%; background: slateblue;
-                    background-image: linear-gradient(top , #FF8F5E, #D44E1A);
-                    box-shadow: 0px 5px 10px #000000, 0px 1px 3px rgba(255, 255, 255, 0.8) inset;
-                    margin: 30px;">
+        <div style="background: #cccccc;">
+          <div class="hekomi"
+              style="width: 160px; height: 160px; border-radius: 50%; 
+                      margin: 30px;">
+              <img src="{{ url_for('static', path='images/SlidePadRed.png') }}"
+                   style="position: relative; top:20px; left:20px;">
+          </div>
         </div>
       </div>  
     </div>
