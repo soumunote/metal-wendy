@@ -8,7 +8,8 @@ from starlette.templating import Jinja2Templates
 import time
 
 import pigpio
-import wingAction;
+import wingAction
+import legAction
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -16,6 +17,7 @@ templates = Jinja2Templates(directory="templates")
 
 pi = pigpio.pi()
 wc = wingAction.WingController(pi)
+lc = legAction.LegController(pi)
 
 @app.get("/")
 async def root(request: Request):
@@ -49,6 +51,10 @@ async def wings_action(name: str):
     wc.rotate(-90, 2)
 
   return {"message": name}
+
+@app.get("/legs/manual/{left}/{right}")
+async def legs_manual(left: int, right: int)
+
 
 if __name__ == "__main__":
   uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

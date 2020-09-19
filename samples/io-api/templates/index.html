@@ -114,11 +114,11 @@
         <h6 class="card-header">Stick</h6>
         <div class="m-3">
           <div class="row">
-            <div class="col m-1 border">&nbsp;</div>
-            <div class="col m-1 border">&nbsp;</div>
+            <div id="motorL" class="col m-1 border text-right">&nbsp;</div>
+            <div id="motorR" class="col m-1 border text-right">&nbsp;</div>
           </div>
           <div class="row">
-            <div id="textX" class="col m-1 border text=right">&nbsp;</div>
+            <div id="textX" class="col m-1 border text-right">&nbsp;</div>
             <div id="textY" class="col m-1 border text-right">&nbsp;</div>
           </div>
         </div>
@@ -193,10 +193,12 @@
           if (this.operating) {
             this.currentX = currentX;
             this.currentY = currentY;
+            const coord = this.coordinate;
             this.slidePad.css({
-              left: this.x + this.initialPosition.left,
-              top:  this.y + this.initialPosition.top,
+              left: coord.x + this.initialPosition.left,
+              top:  coord.y + this.initialPosition.top,
             });
+            
           }
         }
 
@@ -205,9 +207,25 @@
           this.operating = false;
         }
 
+        get coordinate() {
+          const dX = this.currentX - this.startX;
+          const dY = this.currentY - this.startY;
+          const theta = Math.atan2(slidePad.y, slidePad.x);
+          const maxX = Math.cos(theta) * SlidePad.MAX_SLIDE;
+          const maxY = Math.sin(theta) * SlidePad.MAX_SLIDE;
+          let x = slidePad.x;
+          let y = slidePad.y;
+          x = Math.abs(x) < Math.abs(maxX) ? x : maxX; 
+          y = Math.abs(y) < Math.abs(maxY) ? y : maxY; 
+          return {
+            x: x, 
+            y: y,
+          };            
+        }
+
         get x() {
           if (this.operating) {
-            var x = this.currentX - this.startX;
+            const x = this.currentX - this.startX;
             return Math.abs(x) > SlidePad.MAX_SLIDE ? SlidePad.MAX_SLIDE * Math.sign(x) : x;
           }
           else {
@@ -217,12 +235,19 @@
 
         get y() {
           if (this.operating) {
-            var y = this.currentY - this.startY;
+            const y = this.currentY - this.startY;
             return Math.abs(y) > SlidePad.MAX_SLIDE ? SlidePad.MAX_SLIDE * Math.sign(y) : y;
           }
           else {
             return 0;
           } 
+        }
+
+        getMotorL() {
+         let speed = Math.floor(y * -1 / 4) * 20;
+         if (x < 0) {
+          }
+
         }
       }
       const slidePad = new SlidePad($('#pad'));
@@ -248,8 +273,9 @@
       });
 
       function showValue() {
-        $('#textX').html("X=" + Math.floor(slidePad.x));
-        $('#textY').html("Y=" + Math.floor(slidePad.y));
+        const coord = slidePad.coordinate;
+        $('#textX').html(Math.floor(coord.x));
+        $('#textY').html(Math.floor(coord.y));
       }
     });
   </script>
