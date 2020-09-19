@@ -10,9 +10,9 @@
                     ┃     GPIO 17 ┃11┃12┃GPIO 18  PWM0 ┠─ Left Wing 
                     ┃     GPIO 27 ┃13┃14┃GND           ┃  
                     ┃     GPIO 22 ┃15┃16┃GPIO 23       ┠─ DRV8835(8) BIN1/BPHASE
-                    ┃     3.3V    ┃17┃18┃GPIO 24       ┠─ DRV8835(7) BIN2/BENABLE
+                    ┃     3.3V    ┃17┃18┃GPIO 24       ┃  
                     ┃     GPIO 10 ┃19┃20┃GND           ┃  
-                    ┃     GPIO 9  ┃21┃22┃GPIO 25       ┃  
+                    ┃     GPIO 9  ┃21┃22┃GPIO 25       ┠─ DRV8835(7) BIN2/BENABLE
                     ┃     GPIO 11 ┃23┃24┃GPIO 8        ┃  
                     ┃     GND     ┃25┃26┃GPIO 7        ┃  
                     ┃     ID_SD   ┃27┃28┃ID_SC         ┃  
