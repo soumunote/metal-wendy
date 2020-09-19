@@ -13,6 +13,9 @@
   <!-- Bootstrap core CSS -->
   <link href="{{ url_for('static', path='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ url_for('static', path='bootstrap-slider/css/bootstrap-slider.min.css') }}" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/earlyaccess/nikukyu.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/earlyaccess/nicomoji.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/earlyaccess/roundedmplus1c.css" rel="stylesheet" />
   <style>
     .card {
       margin-top: 1.25rem
@@ -24,6 +27,16 @@
         inset -10px 10px 30px rgba(18, 47, 61, 0.5),
         inset 10px -10px 30px rgba(248, 253, 255, 0.9);
     }
+    img {
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none;
+      -o-user-drag: none;
+      user-drag: none;
+    }
+    .wf-nikukyu { font-family: "Nikukyu"; }
+    .wf-nicomoji { font-family: "Nico Moji"; }
+    .wf-roundedmplus1c { font-family: "Rounded Mplus 1c"; }
   </style>
 </head>
 
@@ -64,8 +77,8 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          <h1 class="disokay-4">ウェンディ</h1>
-          <p class="lead">ウェンディへお願いしてみましょう。</p>
+          <h1 class="disokay-4 wf-nikukyu">ウェンディ</h1>
+          <p class="lead wf-roundedmplus1c"><span class="">ウェンディ</span>へお願いしてみましょう。</p>
         </div>        
         <div class="col-4">
           <img src="{{ url_for('static', path='images/wendy.png') }}"/>
@@ -115,7 +128,14 @@
                       margin: 30px;">
               <img src="{{ url_for('static', path='images/SlidePadRed.png') }}"
                    id="pad"
-                   style="position: relative; top:20px; left:20px;">
+                   style="position: relative; top:20px; left:20px; 
+                          touch-action: none;">
+              <!--
+              <canvas id="pad" width="120px" height="120px"
+                   style="position: relative; top:20px; left:20px; 
+                          pointer-events: none;  touch-action: none;">
+              </canvas>
+              -->
           </div>
         </div>
       </div>  
@@ -153,40 +173,83 @@
         $('#navbarResponsive').addClass('collapse');
       });
 
-      const padLeft = $('#pad').css('left');
-      const padTop = $('#pad').css('top');
+      class SlidePad {
+
+        static get MAX_SLIDE() {return 30;}
+
+        constructor(slidePad) {
+          this.slidePad = slidePad;
+          this.initialPosition = { left: 20, top:20 };
+          this.operating = false;
+        }
+
+        start(startX, startY) {
+          this.startX = startX;
+          this.startY = startY;
+          this.operating = true;
+        }
+
+        move(currentX, currentY) {
+          if (this.operating) {
+            this.currentX = currentX;
+            this.currentY = currentY;
+            this.slidePad.css({
+              left: this.x + this.initialPosition.left,
+              top:  this.y + this.initialPosition.top,
+            });
+          }
+        }
+
+        end() {
+          this.move(this.startX , this.startY);
+          this.operating = false;
+        }
+
+        get x() {
+          if (this.operating) {
+            var x = this.currentX - this.startX;
+            return Math.abs(x) > SlidePad.MAX_SLIDE ? SlidePad.MAX_SLIDE * Math.sign(x) : x;
+          }
+          else {
+            return 0;
+          } 
+        }
+
+        get y() {
+          if (this.operating) {
+            var y = this.currentY - this.startY;
+            return Math.abs(y) > SlidePad.MAX_SLIDE ? SlidePad.MAX_SLIDE * Math.sign(y) : y;
+          }
+          else {
+            return 0;
+          } 
+        }
+      }
+      const slidePad = new SlidePad($('#pad'));
       let dragging = false;
-      let orgX, orgY;
-      let absX, absY;
 
       $('#slideArea').on({
 
         "pointerdown": function(e) {
-          console.log("pointerdown X=" + absX + " Y=" + absY);
-          [orgX, orgY] = [e.clientX, e.clientY];
-          [absX, absX] = [0, 0];  
-          dragging = true;
+          slidePad.start(e.clientX, e.clientY);
           showValue();
         },
 
         "pointerup": function(e) {
-          console.log("pointerup");
-          dragging = false;
+          slidePad.end();
+          showValue();
         },
 
         "pointermove": function(e) {
-          console.log("pointermove X=" + absX + " Y=" + absY);
-          if (dragging) {
-            [absX, absY] = [e.clientX - orgX, e.clientY - orgY]
-            showValue();
-          }
+          slidePad.move(e.clientX, e.clientY);
+          showValue();
         },
 
       });
 
       function showValue() {
-        $('#textX').html("X=" + absX);
-        $('#textY').html("Y=" + absY);
+        $('#textX').html("X=" + Math.floor(slidePad.x));
+        $('#textY').html("Y=" + Math.floor(slidePad.y));
       }
     });
   </script>
