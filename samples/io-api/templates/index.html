@@ -170,7 +170,7 @@
             $('#divRun' ).css('display', 'inline-block');
             break ;
         }
-        $('#navbarResponsive').addClass('collapse');
+        $('.navbar-collapse').collapse('hide');
       });
 
       class SlidePad {
@@ -218,6 +218,7 @@
           x = Math.abs(x) < Math.abs(maxX) ? x : maxX; 
           y = Math.abs(y) < Math.abs(maxY) ? y : maxY; 
           return {
+            theta: theta, 
             x: x, 
             y: y,
           };            
@@ -243,12 +244,6 @@
           } 
         }
 
-        getMotorL() {
-         let speed = Math.floor(y * -1 / 4) * 20;
-         if (x < 0) {
-          }
-
-        }
       }
       const slidePad = new SlidePad($('#pad'));
       let dragging = false;
@@ -260,22 +255,86 @@
           showValue();
         },
 
-        "pointerup": function(e) {
-          slidePad.end();
-          showValue();
-        },
-
         "pointermove": function(e) {
           slidePad.move(e.clientX, e.clientY);
           showValue();
         },
 
+        "pointerup": function(e) {
+          slidePad.end();
+          showValue();
+        },
+
+        "pointerleave": function(e) {
+          slidePad.end();
+          showValue();
+        },
+        
       });
 
       function showValue() {
         const coord = slidePad.coordinate;
-        $('#textX').html(Math.floor(coord.x));
-        $('#textY').html(Math.floor(coord.y));
+        const r = Math.pow(Math.pow(coord.x, 2) + Math.pow(coord.y, 2), 0.5);
+        let left  = 0;
+        let right = 0;
+
+        if      (coord.x > 0 && coord.y > 0) {
+          // Right Backword
+          left  = -1 * r;
+          right = -1 * Math.abs(coord.y) / 2.0;
+        } 
+        else if (coord.x < 0 && coord.y > 0) {
+          //Left Backword
+          left  = -1 * Math.abs(coord.y) / 2.0;
+          right = -1 * r;
+        }
+        else if (coord.x < 0 && coord.y < 0) {
+          //Left Forward
+          left  = Math.abs(coord.y) / 2.0;
+          right = r;
+        }
+        else if (coord.x > 0 && coord.y < 0) {
+          //Right Forward    
+          left  = r;
+          right = Math.abs(coord.y) / 2.0;
+        }
+
+        if (Math.cos(coord.theta) > 0.9) {
+          console.log("right");
+          right = -r / 2.0;
+          left  =  r / 2.0;
+        }
+        if (Math.cos(coord.theta) < -0.9) {
+          console.log("left");
+          right =  r / 2.0;
+          left  = -r / 2.0;
+        }
+        if (Math.cos(coord.theta) <  0.1 && Math.cos(coord.theta) > 0.0) {
+          right = left;
+        }
+        if (Math.cos(coord.theta) > -0.1 && Math.cos(coord.theta) < 0.0) {
+          left = right;
+        }
+        
+        if (slidePad.operating){
+          left  = Math.floor(left  * 5);
+          right = Math.floor(right * 5);
+          if (Math.abs(left)  < 20) left  = 0;
+          if (Math.abs(right) < 20) right = 0;
+          console.log("operating");
+        }
+        else {
+          console.log("not operating");
+          left  = 0;
+          right = 0;
+        }
+
+        //console.log(left, right);
+
+        $.ajax({url: "/run/" + left + "/" + right, async: false });
+
+        $('#textX').html(left);
+        $('#textY').html(right);
       }
     });
   </script>

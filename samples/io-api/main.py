@@ -52,9 +52,10 @@ async def wings_action(name: str):
 
   return {"message": name}
 
-@app.get("/legs/manual/{left}/{right}")
-async def legs_manual(left: int, right: int)
-
+@app.get("/run/{left}/{right}")
+async def run(left: int, right: int):
+  lc.run(left, right)
+  return {"message": "Hello World"}
 
 if __name__ == "__main__":
   uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
